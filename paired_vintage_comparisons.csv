@@ -1,0 +1,8 @@
+sheet,target_year,oldest_vintage,latest_vintage,previous_vintage,oldest_ape_pct,previous_ape_pct,latest_ape_pct,earliest_to_latest_ape_change_pp,final_revision_ape_change_pp,earliest_to_latest_improved,last_revision_improved
+AEP,2024,2023,2024,2023,70.46426,70.46426,5.9283,-64.53596,-64.53596,True,True
+AEP,2025,2023,2025,2024,85.63681,7.14816,2.0219,-83.61491,-5.12626,True,True
+DOM,2024,2023,2024,2023,3.28033,3.28033,3.93221,0.65188,0.65188,False,False
+DOM,2025,2023,2025,2024,0.20149,0.44984,10.66243,10.46094,10.21259,False,False
+PS,2025,2024,2025,2024,32.60155,32.60155,13.22677,-19.37478,-19.37478,True,True
+RTO,2024,2023,2024,2023,18.24911,18.24911,2.72722,-15.52189,-15.52189,True,True
+RTO,2025,2023,2025,2024,23.70881,2.79159,5.2916,-18.41721,2.50001,True,False
