@@ -8,7 +8,7 @@ How does a change in forecast vintage affect the accuracy of PJM's reported **an
 This repository reproduces matched July-peak comparisons from PJM's **2026 Load Forecast Accuracy Report** workbook. It does **not** link individual September 2026 utility requests to observed project-level loads; those requests are a separate prospective dataset.
 
 ## Reproduce
-1. Install Python 3.11+ and dependencies `artifact_tool` and `matplotlib` (matplotlib is optional for CSV-only output).
+1. Install Python 3.11+ and dependencies `openpyxl` and `matplotlib` (matplotlib is optional for CSV-only output).
 2. From the project root run `python analyze.py`.
 3. Find `matched_forecasts_actuals.csv`, `paired_vintage_comparisons.csv` in `data/processed/`, and the PNG in `figures/`.
 
