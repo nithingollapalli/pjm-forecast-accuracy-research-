@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
 """Reproduce PJM summer large-load July peak forecast-vintage comparisons.
-Requires: artifact_tool and matplotlib; input: data/raw/2026-accuracy-report.xlsx.
+Requires: openpyxl and matplotlib; input: data/raw/2026-accuracy-report.xlsx.
 Only reported historic observations are compared; missing actuals are excluded.
 """
 from pathlib import Path
 from collections import defaultdict
 import csv, re
-from artifact_tool import Blob, SpreadsheetFile
+from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / 'data/raw/2026-accuracy-report.xlsx'
 OUT = ROOT / 'data/processed'
 OUT.mkdir(parents=True, exist_ok=True)
-wb = SpreadsheetFile.import_xlsx(Blob.load(str(SOURCE)))
+wb = load_workbook(SOURCE, read_only=True, data_only=True)
 raw=[]
-for sheet in wb.worksheets.items:
+for sheet in wb.worksheets:
     # Read the area containing zone, target year, metric, and MW, ignoring chart objects.
-    for row in sheet.get_range('A2:D400').values:
+    for row in sheet.iter_rows(min_row=2, max_col=4, values_only=True):
         if len(row) < 4: continue
         zone, yr, metric, mw = row
         if isinstance(yr, (int,float)) and isinstance(mw, (int,float)) and isinstance(metric,str):
-            raw.append(dict(sheet=sheet.name, zone=str(zone), target_year=int(yr), metric=metric.strip(), mw=float(mw)))
-print('data rows',len(raw),'sheets',len(wb.worksheets.items))
+            raw.append(dict(sheet=sheet.title, zone=str(zone), target_year=int(yr), metric=metric.strip(), mw=float(mw)))
+print('data rows',len(raw),'sheets',len(wb.worksheets))
 
 actual = {}
 forecasts = []
@@ -88,11 +88,12 @@ print('improved oldest->latest',sum(x['earliest_to_latest_improved'] for x in pa
 try:
     import matplotlib.pyplot as plt
     rto=[r for r in matched if r['sheet']=='RTO' and r['target_year']==2025]
+    (ROOT / 'figures').mkdir(parents=True, exist_ok=True)
     fig,ax=plt.subplots(figsize=(9,5))
     ax.bar([str(x['forecast_vintage']) for x in rto],[x['ape_pct_actual_denominator'] for x in rto])
     ax.set(xlabel='PJM forecast vintage',ylabel='Absolute percentage error vs actual (%)',
            title='2025 PJM RTO July large-load peak: forecast vintage accuracy')
-    ax.text(.02,-.23,'Source: PJM 2026 Load Forecast Accuracy Report, RTO worksheet.\\nActual-denominator APE; not systemwide electric-load forecasting error.',
+    ax.text(.02,-.23,'Source: PJM 2026 Load Forecast Accuracy Report, RTO worksheet.\nActual-denominator APE; not systemwide electric-load forecasting error.',
             transform=ax.transAxes,fontsize=9)
     fig.tight_layout();fig.savefig(ROOT/'figures/rto_2025_vintage_ape.png',dpi=180,bbox_inches='tight')
     plt.close(fig)
